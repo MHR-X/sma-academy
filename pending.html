@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>انتظار الموافقة | SMA</title>
+<link rel="icon" type="image/png" sizes="32x32" href="/1.jpg">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700;800&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{ --primary:#0A2540; --accent:#f07f3d; --success:#16a34a; --danger:#dc2626; --bg:#f9fafb; }
+  body { font-family:'Tajawal'; background:var(--bg); min-height:100vh; display:flex; align-items:center; justify-content:center; text-align:center; padding:20px; margin:0; user-select:none; }
+  .card{ background:#fff; padding:60px 40px; border-radius:24px; box-shadow:0 20px 60px rgba(10,37,64,0.08); max-width:500px; width:100%; opacity:0; transform:translateY(30px); animation:fadeInUp 0.8s forwards; }
+  h1{ font-family:'Cairo'; color:var(--primary); margin-bottom:15px; font-size:28px; }
+  p{ color:#64748B; line-height:1.8; margin-bottom:30px; font-size:16px; }
+  .loader{ width:60px; height:60px; border:4px solid #e2e8f0; border-top-color:var(--accent); border-radius:50%; animation:spin 1s linear infinite; margin:0 auto 25px; }
+  .status-badge{ display:inline-block; padding:10px 24px; background:#fff3e0; color:var(--accent); border-radius:100px; font-weight:700; font-size:14px; letter-spacing:0.5px; }
+  .approved-state h1 { color: var(--success); }
+  .rejected-state h1 { color: var(--danger); }
+  @keyframes spin{ to{transform:rotate(360deg);} }
+  @keyframes fadeInUp{ to{opacity:1;transform:translateY(0);} }
+</style>
+</head>
+<body oncontextmenu="return false;">
+
+<div class="card" id="mainCard">
+  <div class="loader"></div>
+  <h1>طلبك قيد المراجعة ⏳</h1>
+  <p>تم استلام بياناتك بنجاح وإرسالها للإدارة.<br>يرجى البقاء في هذه الصفحة حتى يتم تفعيل حسابك.</p>
+  <span class="status-badge">الحالة: في انتظار الموافقة</span>
+</div>
+
+<script>
+  const studentEmail = localStorage.getItem('pending_student_email');
+  
+  // إذا لم يكن هناك إيميل محفوظ، ارجع للصفحة الرئيسية
+  if(!studentEmail) {
+    window.location.href = 'index.html';
+  }
+
+  function checkStatus() {
+    const API_BASE = "https://ee2bd2e9-d27b-4a2b-b2b4-2a31f2a3ad2d-00-1419440viwhxz.janeway.replit.dev";
+    fetch(`${API_BASE}/api/db`)
+      .then(res => res.json())
+      .then(data => {
+        const students = data.students || [];
+        const student = students.find(s => s.email === studentEmail);
+        
+        // إذا تم حذف الحساب أثناء الانتظار
+        if (!student) {
+          document.getElementById('mainCard').innerHTML = `<h1 style="color:var(--danger)">تم إلغاء الطلب</h1><p>قام الإدارة بحذف طلب التسجيل الخاص بك.</p>`;
+          return;
+        }
+        
+        const card = document.getElementById('mainCard');
+        
+        if (student.status === 'approved') {
+          // ✅ القبول: حفظ الإيميل النشط وتحويل آمن
+          localStorage.setItem('active_student_email', studentEmail);
+          localStorage.removeItem('pending_student_email'); // تنظيف
+          
+          card.className = 'card approved-state';
+          card.innerHTML = `
+            <div style="font-size:70px;margin-bottom:20px">✅</div>
+            <h1>تم قبول طلبك!</h1>
+            <p>تهانينا! تم تفعيل حسابك بنجاح.<br>جاري تحويلك للمنصة التعليمية...</p>
+          `;
+          
+          setTimeout(() => {
+            window.location.href = 'home.html';
+          }, 2500);
+        } 
+        
+        else if (student.status === 'rejected') {
+          // ❌ الرفض
+          card.className = 'card rejected-state';
+          card.innerHTML = `
+            <div style="font-size:70px;margin-bottom:20px">❌</div>
+            <h1>تم رفض الطلب</h1>
+            <p>نأسف، لم يتم قبول طلب التسجيل الخاص بك.<br>يمكنك التواصل مع الإدارة للاستفسار.</p>
+            <button onclick="window.location.href='register.html'" style="margin-top:20px;padding:10px 25px;background:var(--primary);color:#fff;border:none;border-radius:8px;cursor:pointer;font-family:'Cairo'">التسجيل مرة أخرى</button>
+          `;
+        }
+      })
+      .catch(err => console.log('Waiting for server connection...'));
+  }
+
+  setInterval(checkStatus, 3000);
+  checkStatus();
+
+  // حماية ضد الخروج العرضي قبل القبول
+  window.onbeforeunload = function(e) {
+    if (!localStorage.getItem('active_student_email')) {
+      e.preventDefault();
+      e.returnValue = '';
+    }
+  };
+</script>
+</body>
+</html>

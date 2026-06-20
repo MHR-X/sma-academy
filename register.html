@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>إنشاء حساب جديد | Sports Medicine Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="icon" type="image/png" sizes="32x32" href="/1.jpg">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --primary:#0A2540;
+    --accent:#f07f3d;
+    --accent-hover:#d96b2e;
+    --bg-light:#f9fafb;
+    --text-dark:#1a4065;
+    --text-gray:#64748B;
+    --border:#e2e8f0;
+    --font-head:'Cairo', sans-serif;
+    --font-body:'Tajawal', sans-serif;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  
+  body{
+    font-family:var(--font-body);
+    background:var(--bg-light);
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    color:var(--text-dark);
+  }
+
+  .container{
+    width:100%;
+    max-width:1000px;
+    background:#fff;
+    border-radius:24px;
+    box-shadow:0 20px 60px rgba(10,37,64,0.08);
+    overflow:hidden;
+    display:flex;
+    opacity:0;
+    transform:translateY(30px);
+    animation:fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    position:relative;
+  }
+
+  /* الجزء الأيمن (الترحيب) */
+  .welcome-side{
+    flex:1;
+    background:linear-gradient(135deg, var(--primary) 0%, #112D4E 100%);
+    padding:60px 40px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    color:#fff;
+    position:relative;
+    overflow:hidden;
+  }
+  
+  .welcome-side::before{
+    content:'';position:absolute;top:-50px;left:-50px;width:200px;height:200px;
+    background:var(--accent);opacity:0.1;border-radius:50%;filter:blur(40px);
+  }
+  .welcome-side::after{
+    content:'';position:absolute;bottom:-50px;right:-50px;width:250px;height:250px;
+    background:#fff;opacity:0.05;border-radius:50%;filter:blur(50px);
+  }
+
+  .logo-area{margin-bottom:40px;z-index:2;}
+  .logo-area img{height:60px;margin:0 auto 15px;display:block;}
+  .logo-area h2{font-family:var(--font-head);font-size:22px;font-weight:800;letter-spacing:0.5px;}
+  .logo-area span{color:var(--accent);font-size:14px;display:block;margin-top:5px;}
+
+  .welcome-text h3{font-family:var(--font-head);font-size:28px;font-weight:700;margin-bottom:15px;line-height:1.4;}
+  .welcome-text p{font-size:15px;opacity:0.8;line-height:1.7;max-width:300px;margin:0 auto;}
+
+  /* الجزء الأيسر (النموذج) */
+  .form-side{
+    flex:1.2;
+    padding:60px 50px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+  }
+
+  .form-header{margin-bottom:35px;}
+  .form-header h1{font-family:var(--font-head);font-size:32px;font-weight:800;color:var(--primary);margin-bottom:8px;}
+  .form-header p{color:var(--text-gray);font-size:15px;}
+
+  .input-group{margin-bottom:20px;position:relative;}
+  .input-group label{
+    display:block;font-size:13px;font-weight:700;color:var(--text-dark);
+    margin-bottom:8px;font-family:var(--font-head);
+  }
+  
+  .input-wrapper{position:relative;}
+  .input-wrapper input, .input-wrapper select{
+    width:100%;padding:14px 16px;
+    border:2px solid var(--border);
+    border-radius:12px;
+    font-family:var(--font-body);
+    font-size:15px;
+    color:var(--text-dark);
+    transition:all 0.3s ease;
+    background:#fff;
+    outline:none;
+  }
+  
+  .input-wrapper input:focus, .input-wrapper select:focus{
+    border-color:var(--accent);
+    box-shadow:0 0 0 4px rgba(240,127,61,0.1);
+  }
+
+  .row{display:flex;gap:15px;}
+  .row .input-group{flex:1;}
+
+  .btn-submit{
+    width:100%;padding:16px;
+    background:var(--accent);
+    color:#fff;
+    border:none;
+    border-radius:12px;
+    font-family:var(--font-head);
+    font-size:16px;
+    font-weight:700;
+    cursor:pointer;
+    transition:all 0.3s ease;
+    margin-top:10px;
+    position:relative;
+    overflow:hidden;
+  }
+  
+  .btn-submit:hover{
+    background:var(--accent-hover);
+    transform:translateY(-2px);
+    box-shadow:0 10px 20px rgba(240,127,61,0.25);
+  }
+
+  /* شاشة النجاح والانتظار */
+  .success-overlay {
+    position: absolute; inset: 0;
+    background: rgba(255,255,255,0.98);
+    backdrop-filter: blur(10px);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    z-index: 10; opacity: 0; visibility: hidden;
+    transition: all 0.4s ease;
+    text-align: center; padding: 40px;
+  }
+  .success-overlay.active { opacity: 1; visibility: visible; }
+  
+  .success-icon {
+    width: 80px; height: 80px;
+    background: var(--accent);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 20px;
+    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  .success-icon svg { width: 40px; height: 40px; fill: #fff; }
+  
+  .success-title {
+    font-family: var(--font-head); font-size: 24px;
+    font-weight: 800; color: var(--primary); margin-bottom: 10px;
+  }
+  .success-desc {
+    font-size: 15px; color: var(--text-gray); line-height: 1.6; max-width: 350px;
+  }
+  .redirect-timer {
+    margin-top: 20px; font-size: 13px; color: var(--accent); font-weight: 700;
+  }
+
+  @keyframes fadeInUp { to { opacity:1; transform:translateY(0); } }
+  @keyframes popIn { 0% { transform: scale(0); } 100% { transform: scale(1); } }
+
+  @media (max-width:850px){
+    .container{flex-direction:column;max-width:500px;}
+    .welcome-side{padding:40px 20px;}
+    .welcome-text h3{font-size:22px;}
+    .form-side{padding:40px 25px;}
+    .row{flex-direction:column;gap:0;}
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  
+  <!-- شاشة نجاح التسجيل -->
+  <div class="success-overlay" id="successOverlay">
+    <div class="success-icon">
+      <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+    </div>
+    <h2 class="success-title">تم إرسال طلبك بنجاح! 🎉</h2>
+    <p class="success-desc">
+      تم استلام بيانات تسجيلك وحفظها في النظام.<br>
+      الطلب حالياً قيد المراجعة من قبل الإدارة.<br>
+      سيتم تحويلك لصفحة الانتظار خلال لحظات...
+    </p>
+    <div class="redirect-timer" id="timerText">جاري التحويل بعد 5 ثوانٍ...</div>
+  </div>
+
+  <!-- قسم الترحيب -->
+  <div class="welcome-side">
+    <div class="logo-area">
+      <img src="1.jpg" alt="SMA Logo">
+      <h2>SPORTS MEDICINE</h2>
+      <span>ACADEMY</span>
+    </div>
+    <div class="welcome-text">
+      <h3>انضم لنخبة المعالجين الرياضيين</h3>
+      <p>ابدأ رحلتك التعليمية اليوم واحصل على وصول فوري لأحدث الدورات في التأهيل والتدليك العلاجي.</p>
+    </div>
+  </div>
+
+  <!-- قسم النموذج -->
+  <div class="form-side">
+    <div class="form-header">
+      <h1>إنشاء حساب جديد</h1>
+      <p>املأ البيانات التالية للانضمام للأكاديمية</p>
+    </div>
+
+    <form id="registerForm">
+      <div class="row">
+        <div class="input-group">
+          <label>الاسم الأول</label>
+          <div class="input-wrapper">
+            <input type="text" id="firstName" placeholder="مثال: أحمد" required>
+          </div>
+        </div>
+        <div class="input-group">
+          <label>اسم العائلة</label>
+          <div class="input-wrapper">
+            <input type="text" id="lastName" placeholder="مثال: محمد" required>
+          </div>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>البريد الإلكتروني</label>
+        <div class="input-wrapper">
+          <input type="email" id="email" placeholder="name@example.com" required>
+        </div>
+      </div>
+
+      <!-- ✅ حقل رقم الهاتف الجديد -->
+      <div class="input-group">
+        <label>رقم الهاتف</label>
+        <div class="input-wrapper">
+          <input type="tel" id="phone" placeholder="01xxxxxxxxx" required pattern="[0-9]{11}" title="يرجى إدخال رقم هاتف صحيح مكون من 11 رقماً">
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>نوع الحساب</label>
+        <div class="input-wrapper">
+          <select id="accountType" required>
+            <option value="" disabled selected>اختر نوع الحساب...</option>
+            <option value="student">متدرب / طالب</option>
+            <option value="instructor">مدرب / معالج</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>كلمة المرور</label>
+        <div class="input-wrapper">
+          <input type="password" id="password" placeholder="••••••••" required minlength="6">
+        </div>
+      </div>
+
+      <button type="submit" class="btn-submit">تسجيل الحساب</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  // دالة إرسال البيانات للسيرفر الحقيقي
+  async function sendToBackend(studentData) {
+    try {
+      const API_BASE = "https://ee2bd2e9-d27b-4a2b-b2b4-2a31f2a3ad2d-00-1419440viwhxz.janeway.replit.dev";
+      const response = await fetch(`${API_BASE}/api/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(studentData)
+      });
+      
+      if (!response.ok) throw new Error('Network response was not ok');
+      
+      const result = await response.json();
+      return result.success;
+    } catch (e) {
+      console.error('Error:', e);
+      alert('تعذر الاتصال بالسيرفر. تأكد من تشغيل السيرفر أولاً.');
+      return false;
+    }
+  }
+
+  document.getElementById('registerForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const btn = this.querySelector('.btn-submit');
+    btn.textContent = 'جاري الإرسال...';
+    btn.disabled = true;
+    
+    const studentData = {
+      id: Date.now(),
+      firstName: document.getElementById('firstName').value.trim(),
+      lastName: document.getElementById('lastName').value.trim(),
+      email: document.getElementById('email').value.trim().toLowerCase(),
+      phone: document.getElementById('phone').value.trim(), // ✅ إضافة رقم الهاتف
+      accountType: document.getElementById('accountType').value,
+      password: document.getElementById('password').value,
+      status: 'pending',
+      registeredAt: new Date().toISOString()
+    };
+    
+    const success = await sendToBackend(studentData);
+    
+    if(success) {
+      // حفظ الإيميل مؤقتاً لصفحة الانتظار
+      localStorage.setItem('pending_student_email', studentData.email);
+      
+      document.getElementById('successOverlay').classList.add('active');
+      
+      let seconds = 5;
+      const timerEl = document.getElementById('timerText');
+      
+      const countdown = setInterval(() => {
+        seconds--;
+        timerEl.textContent = `جاري التحويل بعد ${seconds} ثوانٍ...`;
+        
+        if (seconds <= 0) {
+          clearInterval(countdown);
+          window.location.href = 'pending.html';
+        }
+      }, 1000);
+    } else {
+      btn.textContent = 'تسجيل الحساب';
+      btn.disabled = false;
+    }
+  });
+</script>
+
+</body>
+</html>
