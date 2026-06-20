@@ -1,1 +1,0 @@
-python server.py & streamlit run admin_system.py --server.port $PORT --server.address 0.0.0.0
