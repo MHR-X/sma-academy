@@ -229,13 +229,17 @@
       });
   }
 
-  // ✅ دالة عرض الشهادات (تصميم بسيط: بيانات + تحميل فقط)
+  // ✅ دالة عرض الشهادات المعدلة (معاينة + تحميل)
   function renderCertificates(email, certs) {
     const container = document.getElementById('certificatesList');
     const myCerts = certs.filter(c => c.studentEmail === email);
     
     if(myCerts.length > 0) {
-      container.innerHTML = myCerts.map(cert => `
+      container.innerHTML = myCerts.map(cert => {
+        // بناء الرابط الكامل للشهادة
+        const certUrl = buildFullUrl(cert.filePath);
+        
+        return `
         <div class="cert-item">
           <div class="cert-info">
             <h3>${cert.courseName}</h3>
@@ -250,12 +254,21 @@
               </span>
             </div>
           </div>
-          <a href="${buildFullUrl(cert.filePath)}" download target="_blank" class="download-btn">
-            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-            تحميل PDF
-          </a>
+          
+          <!-- أزرار العرض والتحميل -->
+          <div style="display:flex; gap:10px;">
+            <a href="${certUrl}" target="_blank" class="download-btn" style="background:var(--gold-main);">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              معاينة
+            </a>
+            <a href="${certUrl}" download class="download-btn">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+              تحميل
+            </a>
+          </div>
         </div>
-      `).join('');
+        `;
+      }).join('');
     } else {
       container.innerHTML = `
         <div class="empty-state">
