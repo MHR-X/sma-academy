@@ -79,7 +79,7 @@
   .download-btn{
     padding:10px 20px;background:var(--bg-surface);color:#fff;border-radius:8px;
     font-family:var(--font-display);font-weight:700;font-size:13px;transition:0.3s;
-    display:inline-flex;align-items:center;gap:8px;white-space:nowrap;
+    display:inline-flex;align-items:center;gap:8px;white-space:nowrap; border: none; cursor: pointer;
   }
   .download-btn:hover{background:var(--gold-main);}
 
@@ -162,7 +162,39 @@
   function buildFullUrl(path) {
     if (!path) return null;
     if (path.startsWith('http')) return path;
-    return `${API_BASE}${path.startsWith('/') ? '' : '/'}${path}`;
+    
+    // تنظيف المسارات الداخلية للسيرفر
+    let cleanPath = path;
+    if (path.includes('/home/runner/') || path.includes('__mockup') || path.includes('workspace')) {
+        const fileName = path.split('/').pop(); 
+        cleanPath = `/uploads/${fileName}`;
+    }
+    
+    return `${API_BASE}${cleanPath.startsWith('/') ? '' : '/'}${cleanPath}`;
+  }
+
+  // ✅ دالة التحميل المباشر (نفس مبدأ Streamlit - Blob Fetch)
+  async function downloadCert(url, filename) {
+    try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Network response was not ok');
+        
+        const blob = await response.blob();
+        const blobUrl = window.URL.createObjectURL(blob);
+        
+        const a = document.createElement('a');
+        a.href = blobUrl;
+        a.download = `${filename}.pdf`; 
+        document.body.appendChild(a);
+        a.click();
+        
+        // تنظيف الذاكرة بعد التحميل
+        window.URL.revokeObjectURL(blobUrl);
+        document.body.removeChild(a);
+    } catch (error) {
+        console.error('Download failed:', error);
+        alert('حدث خطأ أثناء التحميل. تأكد من اتصالك بالإنترنت.');
+    }
   }
 
   if(!activeEmail) {
@@ -229,13 +261,13 @@
       });
   }
 
-  // ✅ دالة عرض الشهادات المعدلة (معاينة + تحميل)
+  // ✅ دالة عرض الشهادات المعدلة (معاينة + تحميل مباشر)
   function renderCertificates(email, certs) {
     const container = document.getElementById('certificatesList');
     const myCerts = certs.filter(c => c.studentEmail === email);
     
     if(myCerts.length > 0) {
-      container.innerHTML = myCerts.map(cert => {
+      container.innerHTML = myCerts.map((cert, index) => {
         // بناء الرابط الكامل للشهادة
         const certUrl = buildFullUrl(cert.filePath);
         
@@ -255,16 +287,18 @@
             </div>
           </div>
           
-          <!-- أزرار العرض والتحميل -->
+          <!-- أزرار العرض والتحميل المباشر -->
           <div style="display:flex; gap:10px;">
             <a href="${certUrl}" target="_blank" class="download-btn" style="background:var(--gold-main);">
               <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
               معاينة
             </a>
-            <a href="${certUrl}" download class="download-btn">
+            
+            <!-- زر تحميل يستخدم Blob Fetch مثل Streamlit -->
+            <button onclick="downloadCert('${certUrl}', '${cert.courseName}_${cert.certId}')" class="download-btn">
               <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
               تحميل
-            </a>
+            </button>
           </div>
         </div>
         `;
