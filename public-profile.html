@@ -28,7 +28,10 @@
   .avatar-initials{font-family:var(--font-display);font-size:40px;font-weight:800;color:var(--gold-main);}
   .student-name{font-family:var(--font-display);font-size:22px;font-weight:800;color:var(--bg-surface);margin-bottom:5px;display:flex;align-items:center;justify-content:center;gap:6px;}
   .verified-badge-img{width:22px;height:22px;object-fit:contain;flex-shrink:0;}
-  .student-email{font-size:14px;color:var(--cream-dim);margin-bottom:10px;word-break:break-all;}
+  
+  /* ✅ إخفاء الإيميل في البروفايل العام */
+  .student-email{display:none;}
+  
   .course-badge{display:inline-block;padding:6px 16px;background:var(--gold-pale);color:var(--gold-main);border-radius:100px;font-size:13px;font-weight:700;margin-bottom:15px;border:1px solid rgba(240,127,61,0.2);font-family:var(--font-display);}
   .status-badge{display:inline-block;padding:6px 16px;background:#dcfce7;color:#16a34a;border-radius:100px;font-size:13px;font-weight:700;}
 
@@ -89,6 +92,7 @@
             <div class="avatar-initials">--</div>
           </div>
           <h1 class="student-name" id="profileName">جاري التحميل...</h1>
+          <!-- ✅ الإيميل موجود في الكود بس مخفي من العرض -->
           <p class="student-email" id="profileEmail">--</p>
           <span class="status-badge">✅ حساب مفعل</span>
           <button class="share-btn" onclick="copyProfileLink()">
@@ -210,6 +214,8 @@
 
         document.getElementById('profileName').innerHTML =
           `${student.firstName} ${student.lastName} ${verifiedIcon}`;
+        
+        // ✅ الإيميل بيتخزن بس مش بيتعرض
         document.getElementById('profileEmail').textContent = student.email;
 
         if (student.currentCourse && student.currentCourse.trim() !== '') {
