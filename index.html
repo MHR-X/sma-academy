@@ -617,6 +617,160 @@
     .reveal{opacity:1;transform:none;transition:none;}
     html{scroll-behavior:auto;}
   }
+
+  /* =====================================================
+     RESPONSIVE — all breakpoints
+     ===================================================== */
+
+  /* Hamburger button */
+  .hamburger{
+    display:none;flex-direction:column;gap:5px;cursor:pointer;
+    padding:6px;border:none;background:none;
+  }
+  .hamburger span{
+    display:block;width:24px;height:2px;
+    background:var(--bg-surface);border-radius:2px;
+    transition:all 0.3s;
+  }
+  .hamburger.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px);}
+  .hamburger.open span:nth-child(2){opacity:0;}
+  .hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px);}
+
+  /* Mobile nav drawer */
+  .mobile-nav{
+    display:none;position:fixed;top:0;left:0;right:0;bottom:0;
+    background:rgba(10,37,64,0.97);z-index:200;
+    flex-direction:column;align-items:center;justify-content:center;gap:32px;
+  }
+  .mobile-nav.open{display:flex;}
+  .mobile-nav a{
+    font-family:var(--font-display);font-size:22px;font-weight:700;
+    color:#fff;transition:color 0.2s;
+  }
+  .mobile-nav a:hover{color:var(--gold-main);}
+  .close-mobile-nav{
+    position:absolute;top:24px;left:24px;
+    background:none;border:none;color:#fff;font-size:32px;cursor:pointer;line-height:1;
+  }
+
+  /* ---- ≤ 1200px: large tablets / small laptops ---- */
+  @media (max-width:1200px){
+    .wrap{padding:0 24px;}
+    nav{padding:16px 24px;}
+    h1.hero-title{font-size:clamp(28px,4.5vw,52px);}
+    .hero-stats{gap:28px;padding:16px 28px;}
+    .stat .num{font-size:30px;}
+  }
+
+  /* ---- ≤ 900px: tablets / iPads landscape ---- */
+  @media (max-width:900px){
+    .nav-links{display:none;}
+    .hamburger{display:flex;}
+
+    section{padding:70px 0;}
+    h1.hero-title{font-size:clamp(26px,5vw,44px);}
+    .hero-sub{font-size:16px;}
+    .hero-actions{flex-direction:column;align-items:center;gap:12px;}
+    .btn-lg{width:100%;max-width:280px;justify-content:center;}
+
+    .hero-stats{flex-wrap:wrap;gap:20px;padding:16px 20px;}
+    .stat{min-width:100px;}
+    .stat .num{font-size:28px;}
+
+    .pillar-grid{grid-template-columns:1fr;}
+    .cert-section{grid-template-columns:1fr;}
+    .foot-grid{grid-template-columns:1fr 1fr;}
+    .foot-bottom{flex-direction:column;gap:8px;text-align:center;}
+
+    .acc-grid{grid-template-columns:repeat(auto-fit,minmax(220px,1fr));}
+
+    .timeline::before{right:20px;}
+    .t-marker{width:42px;height:42px;font-size:16px;}
+    .t-step{gap:20px;}
+  }
+
+  /* ---- ≤ 768px: iPads portrait / large phones ---- */
+  @media (max-width:768px){
+    section{padding:56px 0;}
+    .wrap{padding:0 16px;}
+    nav{padding:14px 16px;}
+
+    h2{font-size:clamp(22px,6vw,34px);}
+    .section-head{margin-bottom:36px;}
+
+    .hero-slider{min-height:100svh;}
+    h1.hero-title{font-size:clamp(24px,6vw,38px);line-height:1.25;}
+    .hero-sub{font-size:15px;max-width:100%;}
+    .eyebrow{font-size:12px;padding:5px 14px;}
+
+    .hero-stats{width:100%;justify-content:space-around;}
+    .stat{min-width:80px;}
+    .stat .num{font-size:24px;}
+    .stat .lbl{font-size:11px;}
+
+    .students-grid{grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;}
+    .student-card{padding:22px 14px;}
+
+    .search-input{padding:13px 18px;font-size:15px;}
+
+    .acc-grid{grid-template-columns:1fr;}
+
+    .cert-visual{padding:24px;}
+    .cert-card{padding:24px 20px;}
+    .cert-card .cname{font-size:22px;}
+    .cert-card .ctitle{font-size:15px;}
+
+    .timeline::before{display:none;}
+    .t-step{flex-direction:column;gap:10px;padding-bottom:36px;}
+    .t-marker{width:36px;height:36px;font-size:14px;margin:0 auto;}
+
+    .modal-content{padding:28px 20px;}
+    .modal-title{font-size:18px;}
+
+    .foot-grid{grid-template-columns:1fr;gap:28px;}
+  }
+
+  /* ---- ≤ 480px: mobile phones ---- */
+  @media (max-width:480px){
+    section{padding:44px 0;}
+    .wrap{padding:0 14px;}
+    nav{padding:12px 14px;}
+
+    .logo span{font-size:14px !important;}
+    .logo img{height:34px;}
+
+    h1.hero-title{font-size:clamp(20px,7vw,32px);}
+    .hero-sub{font-size:14px;}
+    .btn-lg{padding:13px 24px;font-size:15px;}
+
+    .hero-stats{flex-wrap:wrap;gap:12px;}
+    .stat{min-width:calc(50% - 6px);}
+
+    h2{font-size:clamp(20px,7vw,28px);}
+
+    .students-grid{grid-template-columns:1fr 1fr;gap:12px;}
+    .student-card{padding:18px 10px;}
+    .student-avatar{width:64px;height:64px;font-size:22px;}
+    .student-name{font-size:14px;}
+    .student-certs-count{font-size:11px;}
+
+    .pillar{padding:28px 20px;}
+
+    .acc-card{padding:28px 20px;}
+
+    .foot-col a{margin-bottom:8px;}
+
+    .social-icons{gap:14px;}
+    .social-link{width:42px;height:42px;}
+  }
+
+  /* ---- ≤ 360px: very small phones ---- */
+  @media (max-width:360px){
+    h1.hero-title{font-size:20px;}
+    .students-grid{grid-template-columns:1fr;}
+    .stat{min-width:calc(50% - 6px);}
+  }
+
   /* تنسيق قسم التواصل في الفوتر */
 .contact-section {
     background: var(--bg-surface);
@@ -684,11 +838,22 @@
       <a href="#search-students">بحث عن متدرب</a>
     </div>
     <div class="nav-cta">
-        <!-- زر الدخول الذكي -->
-      <button onclick="handleLogin()" class="btn btn-solid"> دخول</button>
+      <button onclick="handleLogin()" class="btn btn-solid">دخول</button>
+      <button class="hamburger" id="hamburgerBtn" onclick="toggleMobileNav()" aria-label="القائمة">
+        <span></span><span></span><span></span>
+      </button>
     </div>
   </nav>
 </header>
+
+<div class="mobile-nav" id="mobileNav">
+  <button class="close-mobile-nav" onclick="toggleMobileNav()">×</button>
+  <a href="#courses" onclick="toggleMobileNav()">الكورسات</a>
+  <a href="#pathway" onclick="toggleMobileNav()">المسار التدريبي</a>
+  <a href="#cert" onclick="toggleMobileNav()">الشهادات</a>
+  <a href="#search-students" onclick="toggleMobileNav()">بحث عن متدرب</a>
+  <button onclick="handleLogin();toggleMobileNav();" style="padding:14px 36px;background:var(--gold-main);color:#fff;border:none;border-radius:8px;font-family:var(--font-display);font-weight:700;font-size:16px;cursor:pointer;">دخول</button>
+</div>
 
 <!-- HERO SLIDER SECTION -->
 <section class="hero-slider" id="home">
@@ -1218,6 +1383,17 @@
   const API_BASE = "https://ee2bd2e9-d27b-4a2b-b2b4-2a31f2a3ad2d-00-1419440viwhxz.janeway.replit.dev";
 
   // ==========================================
+  // 0. Mobile nav toggle
+  // ==========================================
+  function toggleMobileNav() {
+    const nav = document.getElementById('mobileNav');
+    const btn = document.getElementById('hamburgerBtn');
+    nav.classList.toggle('open');
+    btn.classList.toggle('open');
+    document.body.style.overflow = nav.classList.contains('open') ? 'hidden' : '';
+  }
+
+  // ==========================================
   // 2. دالة الدخول الذكية (زر الدخول في الهيدر)
   // ==========================================
   async function handleLogin() {
@@ -1379,12 +1555,17 @@
       const certCount = allCertificates.filter(c => c.studentEmail === s.email).length;
       const initials = (s.firstName.charAt(0) + s.lastName.charAt(0)).toUpperCase();
       
-      // ✅ إصلاح مسار الصورة بإضافة رابط السيرفر الأساسي
+      // ✅ بحث عن الصورة في جميع الحقول + رابط صحيح /api/uploads/
+      const imgKeys = ['imagePath', 'profile_image', 'url', 'avatar', 'profileImage', 'avatarUrl', 'photo'];
+      let profileImgPath = null;
+      for (const key of imgKeys) {
+        if (s[key] && typeof s[key] === 'string') { profileImgPath = s[key]; break; }
+      }
       let avatarContent = initials;
-      if (s.profile_image && s.profile_image.startsWith('uploads/')) {
-        avatarContent = `<img src="${API_BASE}/${s.profile_image}" alt="${s.firstName}">`;
-      } else if (s.profile_image) {
-        avatarContent = `<img src="${s.profile_image}" alt="${s.firstName}">`;
+      if (profileImgPath) {
+        const filename = profileImgPath.split('/').pop();
+        const imgUrl = profileImgPath.startsWith('http') ? profileImgPath : `${API_BASE}/api/uploads/${filename}`;
+        avatarContent = `<img src="${imgUrl}" alt="${s.firstName}" onerror="this.parentElement.innerHTML='${initials}'">`;
       }
       
       const verifiedBadge = s.is_verified 
