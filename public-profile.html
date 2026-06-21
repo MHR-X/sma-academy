@@ -8,7 +8,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
   :root{ --bg-deep:#f9fafb; --bg-surface:#0A2540; --bg-surface-2:#112D4E; --gold-main:#f07f3d; --gold-light:#E5C585; --gold-pale:#e3ebfd; --cream:#1a4065; --cream-dim:#64748B; --line:rgba(10,37,64,0.08); --font-display:'Cairo', sans-serif; --font-body:'Tajawal', sans-serif; }
   *{margin:0;padding:0;box-sizing:border-box;} body{background:var(--bg-deep);color:var(--cream);font-family:var(--font-body);min-height:100vh;display:flex;flex-direction:column;} a{text-decoration:none;color:inherit;} img,svg{display:block;} .wrap{max-width:1180px;margin:0 auto;padding:0 32px;}
@@ -28,57 +27,39 @@
   .avatar-wrapper img{width:100%;height:100%;object-fit:cover;}
   .avatar-initials{font-family:var(--font-display);font-size:40px;font-weight:800;color:var(--gold-main);}
   .student-name{font-family:var(--font-display);font-size:22px;font-weight:800;color:var(--bg-surface);margin-bottom:5px;display:flex;align-items:center;justify-content:center;gap:6px;}
-  
-  .verified-badge-img { width: 22px; height: 22px; object-fit: contain; flex-shrink: 0; }
-  
+  .verified-badge-img{width:22px;height:22px;object-fit:contain;flex-shrink:0;}
   .student-email{font-size:14px;color:var(--cream-dim);margin-bottom:10px;word-break:break-all;}
-  
-  /* تنسيق بادج الكورس الحالي */
-  .course-badge {
-    display:inline-block; 
-    padding:6px 16px; 
-    background:var(--gold-pale); 
-    color:var(--gold-main); 
-    border-radius:100px; 
-    font-size:13px; 
-    font-weight:700; 
-    margin-bottom:15px; 
-    border:1px solid rgba(240,127,61,0.2);
-    font-family: var(--font-display);
-  }
-
+  .course-badge{display:inline-block;padding:6px 16px;background:var(--gold-pale);color:var(--gold-main);border-radius:100px;font-size:13px;font-weight:700;margin-bottom:15px;border:1px solid rgba(240,127,61,0.2);font-family:var(--font-display);}
   .status-badge{display:inline-block;padding:6px 16px;background:#dcfce7;color:#16a34a;border-radius:100px;font-size:13px;font-weight:700;}
 
-  .share-btn {
-    margin-top: 20px; width: 100%; padding: 12px; background: var(--bg-surface); color: #fff; border: none; border-radius: 8px; font-family: var(--font-display); font-weight: 700; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px;
-  }
-  .share-btn:hover { background: var(--gold-main); }
+  .share-btn{margin-top:20px;width:100%;padding:12px;background:var(--bg-surface);color:#fff;border:none;border-radius:8px;font-family:var(--font-display);font-weight:700;cursor:pointer;transition:0.3s;display:flex;align-items:center;justify-content:center;gap:8px;}
+  .share-btn:hover{background:var(--gold-main);}
+
+  /* Preview modal */
+  .preview-modal{position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:3000;display:none;align-items:center;justify-content:center;padding:20px;}
+  .preview-modal.active{display:flex;}
+  .preview-inner{position:relative;max-width:90vw;max-height:90vh;display:flex;flex-direction:column;align-items:center;gap:16px;}
+  .preview-inner img{max-width:100%;max-height:80vh;border-radius:8px;box-shadow:0 20px 60px rgba(0,0,0,0.5);}
+  .close-preview{position:absolute;top:-40px;left:0;background:none;border:none;color:#fff;font-size:32px;cursor:pointer;line-height:1;}
+  .preview-actions{display:flex;gap:12px;}
+  .preview-dl-btn{padding:10px 24px;background:var(--gold-main);color:#fff;border:none;border-radius:8px;font-family:var(--font-display);font-weight:700;cursor:pointer;font-size:14px;}
 
   .content-section h2{font-family:var(--font-display);font-size:24px;font-weight:800;color:var(--bg-surface);margin-bottom:25px;display:flex;align-items:center;gap:10px;}
   .cert-list{display:grid;gap:20px;}
-  
-  .cert-item{
-    background:#fff;border:1px solid var(--line);border-radius:16px;
-    padding:25px;display:flex;justify-content:space-between;align-items:center;
-    transition:0.3s;box-shadow:0 4px 15px rgba(0,0,0,0.02);
-  }
+  .cert-item{background:#fff;border:1px solid var(--line);border-radius:16px;padding:25px;display:flex;justify-content:space-between;align-items:center;transition:0.3s;box-shadow:0 4px 15px rgba(0,0,0,0.02);}
   .cert-item:hover{border-color:var(--gold-main);transform:translateY(-3px);box-shadow:0 10px 25px rgba(240,127,61,0.1);}
-  
   .cert-info h3{font-family:var(--font-display);font-size:18px;font-weight:700;color:var(--bg-surface);margin-bottom:8px;}
   .cert-meta{display:flex;gap:20px;font-size:13px;color:var(--cream-dim);flex-wrap:wrap;}
   .cert-meta span{display:flex;align-items:center;gap:5px;}
-  
-  .download-btn{
-    padding:10px 20px;background:var(--bg-surface);color:#fff;border-radius:8px;
-    font-family:var(--font-display);font-weight:700;font-size:13px;transition:0.3s;
-    display:inline-flex;align-items:center;gap:8px;white-space:nowrap;
-  }
+  .download-btn{padding:10px 20px;background:var(--bg-surface);color:#fff;border-radius:8px;font-family:var(--font-display);font-weight:700;font-size:13px;transition:0.3s;display:inline-flex;align-items:center;gap:8px;white-space:nowrap;border:none;cursor:pointer;}
   .download-btn:hover{background:var(--gold-main);}
+  .download-btn.preview-btn{background:var(--gold-main);}
+  .download-btn.preview-btn:hover{background:#d96b2e;}
 
   .empty-state{text-align:center;padding:60px 20px;background:#fff;border-radius:16px;border:1px dashed var(--line);color:var(--cream-dim);}
   .error-state{text-align:center;padding:60px 20px;background:#fff;border-radius:16px;border:1px solid #fecaca;color:#dc2626;}
 
-  @media(max-width:900px){ .profile-grid{grid-template-columns:1fr;} .profile-card{position:static;} }
+  @media(max-width:900px){.profile-grid{grid-template-columns:1fr;}.profile-card{position:static;}.cert-item{flex-direction:column;align-items:flex-start;gap:16px;}}
 </style>
 </head>
 <body>
@@ -108,12 +89,8 @@
             <div class="avatar-initials">--</div>
           </div>
           <h1 class="student-name" id="profileName">جاري التحميل...</h1>
-          
           <p class="student-email" id="profileEmail">--</p>
-          <!-- سيتم إضافة بادج الكورس هنا ديناميكياً -->
-          
           <span class="status-badge">✅ حساب مفعل</span>
-          
           <button class="share-btn" onclick="copyProfileLink()">
             <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
             نسخ رابط البروفايل
@@ -132,8 +109,7 @@
 
       </div>
     </div>
-    
-    <!-- حالة الخطأ أو عدم وجود طالب -->
+
     <div id="errorState" class="error-state" style="display:none;">
       <svg width="64" height="64" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" style="margin:0 auto 20px;"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg>
       <h3 style="font-family:var(--font-display);margin-bottom:10px;">لم يتم العثور على هذا البروفايل</h3>
@@ -143,17 +119,71 @@
   </div>
 </main>
 
+<!-- Certificate Preview Modal -->
+<div class="preview-modal" id="previewModal" onclick="closePreview(event)">
+  <div class="preview-inner">
+    <button class="close-preview" onclick="closePreviewBtn()">×</button>
+    <img id="previewImg" src="" alt="معاينة الشهادة">
+    <div class="preview-actions">
+      <button class="preview-dl-btn" id="previewDlBtn">⬇️ تحميل الشهادة</button>
+    </div>
+  </div>
+</div>
+
 <script>
   const API_BASE = "https://ee2bd2e9-d27b-4a2b-b2b4-2a31f2a3ad2d-00-1419440viwhxz.janeway.replit.dev";
-  
-  // دالة مساعدة لبناء الروابط الكاملة
+
+  // ✅ FIX: all files served at /api/uploads/<filename>
   function buildFullUrl(path) {
     if (!path) return null;
     if (path.startsWith('http')) return path;
-    return `${API_BASE}${path.startsWith('/') ? '' : '/'}${path}`;
+    const filename = path.split('/').pop();
+    if (!filename) return null;
+    return `${API_BASE}/api/uploads/${filename}`;
   }
 
-  // جلب الإيميل من رابط الصفحة
+  // ✅ FIX: removed hardcoded extension — uses original file extension
+  async function downloadCert(url, displayName) {
+    try {
+      const response = await fetch(url);
+      if (!response.ok) throw new Error(`Server returned ${response.status}`);
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+      const ext = url.split('.').pop().split('?')[0] || 'jpg';
+      const a = document.createElement('a');
+      a.href = blobUrl;
+      a.download = `${displayName}.${ext}`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(blobUrl);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error('Download failed:', error);
+      alert('حدث خطأ أثناء التحميل. تأكد من اتصالك بالإنترنت.');
+    }
+  }
+
+  // ✅ Preview modal
+  function openPreview(url, displayName) {
+    const modal = document.getElementById('previewModal');
+    const img = document.getElementById('previewImg');
+    const dlBtn = document.getElementById('previewDlBtn');
+    img.src = url;
+    dlBtn.onclick = () => downloadCert(url, displayName);
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closePreview(e) {
+    if (e.target === document.getElementById('previewModal')) closePreviewBtn();
+  }
+
+  function closePreviewBtn() {
+    document.getElementById('previewModal').classList.remove('active');
+    document.getElementById('previewImg').src = '';
+    document.body.style.overflow = '';
+  }
+
   const urlParams = new URLSearchParams(window.location.search);
   const targetEmail = urlParams.get('email');
 
@@ -165,53 +195,48 @@
       .then(data => {
         const students = data.students || [];
         const student = students.find(s => s.email === targetEmail && s.status === 'approved');
-        
+
         if (!student) {
           document.getElementById('errorState').style.display = 'block';
           return;
         }
 
-        // إظهار المحتوى الرئيسي
         document.getElementById('mainContent').style.display = 'block';
 
-        // تعبئة البيانات
         const isVerified = student.is_verified === true;
-        const verifiedIcon = isVerified 
-          ? '<img src="6.png" class="verified-badge-img" alt="موثق" title="حساب موثق">' 
+        const verifiedIcon = isVerified
+          ? '<img src="6.png" class="verified-badge-img" alt="موثق" title="حساب موثق">'
           : '';
-        
-        document.getElementById('profileName').innerHTML = `${student.firstName} ${student.lastName} ${verifiedIcon}`;
+
+        document.getElementById('profileName').innerHTML =
+          `${student.firstName} ${student.lastName} ${verifiedIcon}`;
         document.getElementById('profileEmail').textContent = student.email;
 
-        // ✅ عرض المسار التدريبي الحالي (لو موجود ومحدد من الأدمن)
-        if (student.currentCourse && student.currentCourse.trim() !== "") {
-            const courseBadge = document.createElement('div');
-            courseBadge.className = 'course-badge';
-            courseBadge.innerHTML = `📚 ${student.currentCourse}`;
-            document.getElementById('profileEmail').after(courseBadge);
+        if (student.currentCourse && student.currentCourse.trim() !== '') {
+          const badge = document.createElement('div');
+          badge.className = 'course-badge';
+          badge.innerHTML = `📚 ${student.currentCourse}`;
+          document.getElementById('profileEmail').after(badge);
         }
-        
-        // ✅ عرض صورة البروفايل (حل شامل لجميع أنظمة الرفع)
+
         const avatarWrapper = document.getElementById('avatarWrapper');
         const initials = (student.firstName.charAt(0) + student.lastName.charAt(0)).toUpperCase();
-        
+        const possibleKeys = ['imagePath','url','profile_image','avatar','profileImage','avatarUrl','photo'];
         let profileImgPath = null;
-        const possibleKeys = ['imagePath', 'url', 'profile_image', 'avatar', 'profileImage', 'avatarUrl', 'photo'];
         for (const key of possibleKeys) {
-            if (student[key] && typeof student[key] === 'string') {
-                profileImgPath = student[key];
-                break;
-            }
+          if (student[key] && typeof student[key] === 'string') {
+            profileImgPath = student[key];
+            break;
+          }
         }
 
         const fullAvatarUrl = buildFullUrl(profileImgPath);
         if (fullAvatarUrl) {
-            avatarWrapper.innerHTML = `<img src="${fullAvatarUrl}" alt="صورة البروفايل" onerror="this.parentElement.innerHTML='<div class=\\'avatar-initials\\'>${initials}</div>'">`;
+          avatarWrapper.innerHTML = `<img src="${fullAvatarUrl}" alt="صورة البروفايل" onerror="this.parentElement.innerHTML='<div class=\\'avatar-initials\\'>${initials}</div>'">`;
         } else {
-            avatarWrapper.innerHTML = `<div class="avatar-initials">${initials}</div>`;
+          avatarWrapper.innerHTML = `<div class="avatar-initials">${initials}</div>`;
         }
 
-        // عرض الشهادات
         renderCertificates(student.email, data.certificates || []);
       })
       .catch(err => {
@@ -223,9 +248,33 @@
   function renderCertificates(email, certs) {
     const container = document.getElementById('certificatesList');
     const myCerts = certs.filter(c => c.studentEmail === email);
-    
-    if(myCerts.length > 0) {
-      container.innerHTML = myCerts.map(cert => `
+
+    if (myCerts.length > 0) {
+      container.innerHTML = myCerts.map((cert) => {
+        const certUrl = buildFullUrl(cert.filePath);
+        const displayName = `${cert.courseName}_${cert.certId}`;
+        const isImage = certUrl && /\.(jpg|jpeg|png|webp|gif)$/i.test(certUrl);
+
+        const previewBtn = certUrl
+          ? isImage
+            ? `<button onclick="openPreview('${certUrl}','${displayName}')" class="download-btn preview-btn">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                معاينة
+              </button>`
+            : `<a href="${certUrl}" target="_blank" class="download-btn preview-btn">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                معاينة
+              </a>`
+          : '';
+
+        const downloadBtn = certUrl
+          ? `<button onclick="downloadCert('${certUrl}','${displayName}')" class="download-btn">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+              تحميل
+            </button>`
+          : '';
+
+        return `
         <div class="cert-item">
           <div class="cert-info">
             <h3>${cert.courseName}</h3>
@@ -240,18 +289,17 @@
               </span>
             </div>
           </div>
-          <a href="${buildFullUrl(cert.filePath)}" download target="_blank" class="download-btn">
-            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-            تحميل PDF
-          </a>
-        </div>
-      `).join('');
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            ${previewBtn}
+            ${downloadBtn}
+          </div>
+        </div>`;
+      }).join('');
     } else {
       container.innerHTML = `
         <div class="empty-state">
           <p>لا توجد شهادات صادرة لهذا الطالب حتى الآن.</p>
-        </div>
-      `;
+        </div>`;
     }
   }
 
